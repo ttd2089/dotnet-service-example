@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Things.Domain.Models;
 
-namespace Things.Data;
+namespace Things.Database;
 
 public class ThingsDbContext : DbContext
 {

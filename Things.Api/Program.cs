@@ -1,14 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Things.Api.Configuration;
-using Things.Data;
+using Things.Database;
+using Things.Domain.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IThingsService, ThingsService>();
+builder.Services.AddScoped<IDataSource, DataSource>();
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(EntityRepository<,>));
 
 var startupConfig = builder.Configuration.GetSection("StartupConfig").Get<StartupConfig>() ?? new();
 
 builder.Services.AddDbContext<ThingsDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Default"));
+});
 
 builder.Services.AddControllers();
 

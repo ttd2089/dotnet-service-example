@@ -1,24 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using Things.Data;
-
+using Things.Domain.Models;
+using Things.Domain.Services;
 
 namespace Things.Api.Controllers;
 
-/// <summary>
-/// </summary>
 [ApiController]
 [Route("[controller]")]
 public class ThingsController : ControllerBase
 {
-    private readonly ThingsDbContext _thingsDbContext;
+    private readonly IThingsService _thingsService;
     private readonly ILogger<ThingsController> _logger;
 
-    /// <summary>
-    /// </summary>
-    public ThingsController(ThingsDbContext thingsDbContext, ILogger<ThingsController> logger)
+    public ThingsController(IThingsService thingsService, ILogger<ThingsController> logger)
     {
-        _thingsDbContext = thingsDbContext;
+        _thingsService = thingsService;
         _logger = logger;
     }
 
@@ -33,7 +29,7 @@ public class ThingsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = null!)]
     public async Task<ActionResult<ThingResponseBody>> GetThing([FromRoute] Guid id)
     {
-        var thing = await _thingsDbContext.Things.FindAsync(id);
+        var thing = await _thingsService.GetThingAsync(id);
         return thing == null
             ? NotFound()
             : Ok(new ThingResponseBody(thing));
@@ -48,15 +44,8 @@ public class ThingsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ThingResponseBody))]
     public async Task<ActionResult<ThingResponseBody>> CreateThing([FromBody] ThingRequestBody createThingRequest)
     {
-        var thing = new Thing
-        {
-            Id = Guid.NewGuid(),
-            Name = createThingRequest.Name,
-            Description = createThingRequest.Description,
-        };
-        var result = await _thingsDbContext.Things.AddAsync(thing);
-        await _thingsDbContext.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetThing), new { id = thing.Id }, new ThingResponseBody(result.Entity));
+        var thing = await _thingsService.CreateThingAsync(createThingRequest.Into());
+        return CreatedAtAction(nameof(GetThing), new { id = thing.Id }, new ThingResponseBody(thing));
     }
 
     /// <summary>
@@ -71,15 +60,7 @@ public class ThingsController : ControllerBase
         [FromRoute] Guid id,
         [FromBody] ThingRequestBody updateThingRequest)
     {
-        var thing = await _thingsDbContext.Things.FindAsync(id);
-        if (thing == null)
-        {
-            return NotFound();
-        }
-        thing.Name = updateThingRequest.Name;
-        thing.Description = updateThingRequest.Description;
-        _thingsDbContext.Update(thing);
-        await _thingsDbContext.SaveChangesAsync();
+        var thing = await _thingsService.UpdateThingAsync(id, updateThingRequest.Into());
         return thing == null
             ? NotFound()
             : Ok(new ThingResponseBody(thing));
@@ -95,14 +76,9 @@ public class ThingsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = null!)]
     public async Task<ActionResult> DeleteThing([FromRoute] Guid id)
     {
-        var thing = await _thingsDbContext.Things.FindAsync(id);
-        if (thing == null)
-        {
-            return NotFound();
-        }
-        _thingsDbContext.Remove(thing);
-        await _thingsDbContext.SaveChangesAsync();
-        return NoContent();
+        return await _thingsService.DeleteThingAsync(id)
+            ? NoContent()
+            : NotFound();
     }
 
     /// <summary>
@@ -114,14 +90,16 @@ public class ThingsController : ControllerBase
         /// The name of the thing.
         /// </summary>
         [Required]
-        [StringLength(128, MinimumLength = 1)]
+        [StringLength(Thing.MaxNameLength, MinimumLength = 1)]
         public string Name { get; set; } = null!;
 
         /// <summary>
         /// An optional description of the thing.
         /// </summary>
-        [StringLength(4096)]
+        [StringLength(Thing.MaxDescriptionLength)]
         public string? Description { get; set; }
+
+        internal ThingFields Into() => new(Name, Description);
     }
 
     /// <summary>
@@ -139,13 +117,13 @@ public class ThingsController : ControllerBase
         /// The name of the thing.
         /// </summary>
         [Required]
-        [StringLength(128, MinimumLength = 1)]
+        [StringLength(Thing.MaxNameLength, MinimumLength = 1)]
         public string Name { get; set; }
 
         /// <summary>
         /// An optional description of the thing.
         /// </summary>
-        [StringLength(4096)]
+        [StringLength(Thing.MaxDescriptionLength)]
         public string? Description { get; set; }
 
         internal ThingResponseBody(Thing thing)

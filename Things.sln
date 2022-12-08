@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Things.Api", "Things.Api\Things.Api.csproj", "{8079C6A9-53D8-4559-805B-FA3B52F3E690}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Things.Database", "Things.Database\Things.Database.csproj", "{0893B994-FA5F-446D-AE7A-C697663089BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Things.Domain", "Things.Domain\Things.Domain.csproj", "{C89BBCA3-03A4-4F59-8026-25C285D4580D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{8079C6A9-53D8-4559-805B-FA3B52F3E690}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8079C6A9-53D8-4559-805B-FA3B52F3E690}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8079C6A9-53D8-4559-805B-FA3B52F3E690}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0893B994-FA5F-446D-AE7A-C697663089BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0893B994-FA5F-446D-AE7A-C697663089BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0893B994-FA5F-446D-AE7A-C697663089BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0893B994-FA5F-446D-AE7A-C697663089BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C89BBCA3-03A4-4F59-8026-25C285D4580D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C89BBCA3-03A4-4F59-8026-25C285D4580D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C89BBCA3-03A4-4F59-8026-25C285D4580D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C89BBCA3-03A4-4F59-8026-25C285D4580D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

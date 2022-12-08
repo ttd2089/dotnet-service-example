@@ -83,6 +83,14 @@ svc-down +SERVICES="":
     docker compose down {{SERVICES}}
 
 ##
+# Workflow Recipes
+##
+
+# Creates a new migration with the current DbContext changes
+migrations-add NAME:
+    dotnet ef migrations add --startup-project Things.Api --project Things.Database {{NAME}}
+
+##
 # Miscellaneous Recipes
 ##
 

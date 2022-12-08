@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Things.Data;
+using Things.Database;
 
 #nullable disable
 
-namespace Things.Api.Migrations
+namespace Things.Database.Migrations
 {
     [DbContext(typeof(ThingsDbContext))]
-    partial class ThingsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221208002332_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace Things.Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Things.Data.Thing", b =>
+            modelBuilder.Entity("Things.Domain.Models.Thing", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
